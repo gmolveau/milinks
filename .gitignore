@@ -4,3 +4,4 @@
 **/*.class
 **/bower_components
 **/credentials.py
+**/secret_key.py
