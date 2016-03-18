@@ -4,6 +4,7 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
 from flask_material import Material
 from .credentials import db_user, db_pass, db_base
+from .secret_key import _secret_key
 
 app = Flask(__name__)
 
@@ -14,7 +15,7 @@ login_manager = LoginManager(app)
 material = Material(app)
 
 app.config['BOOTSTRAP_SERVE_LOCAL'] = True
-app.config['SECRET_KEY'] = "efd04c67-1745-476e-a18a-6295999a2eca"
+app.config['SECRET_KEY'] = _secret_key
 # use
 
 
