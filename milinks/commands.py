@@ -1,4 +1,4 @@
-from .app import app, manager, db
+from .app import app, manager, db, login_manager, material
 
 @manager.command
 def syncdb():

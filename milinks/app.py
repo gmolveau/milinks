@@ -16,7 +16,7 @@ material = Material(app)
 
 app.config['BOOTSTRAP_SERVE_LOCAL'] = True
 app.config['SECRET_KEY'] = _secret_key
-# use
+# use uuidgen to generate the secret key
 
 
 app.config['SQLALCHEMY_DATABASE_URI'] = (
