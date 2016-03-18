@@ -1,4 +1,5 @@
 **/venv/
 **/__pycache__/
-*.pyc
-*.class
+**/.pyc
+**/*.class
+**/bower_components
