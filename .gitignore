@@ -2,6 +2,6 @@
 **/__pycache__/
 **/.pyc
 **/*.class
-**/bower_components
+**/static/bower_components
 **/credentials.py
 **/secret_key.py
