@@ -1,7 +1,5 @@
 **/venv/
 **/__pycache__/
 **/.pyc
-**/*.class
-**/static/bower_components
-**/credentials.py
-**/secret_key.py
+project/credentials.py
+project/static/bower_components
