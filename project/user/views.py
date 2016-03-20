@@ -12,20 +12,12 @@ from flask import render_template, url_for, \
 from flask.ext.login import login_user, logout_user, \
     login_required, current_user
 
-from milinks.models import User
-from milinks.email import send_email
-from milinks.token import generate_confirmation_token, confirm_token
-from milinks.decorators import check_confirmed
-from milinks import db, bcrypt
+from project.models import User
+from project.email import send_email
+from project.token import generate_confirmation_token, confirm_token
+from project.decorators import check_confirmed
+from project import db, bcrypt, app
 from .forms import LoginForm, RegisterForm, ChangePasswordForm
-
-
-################
-#### config ####
-################
-
-app = Blueprint('user', __name__,)
-
 
 ################
 #### routes ####
@@ -66,7 +58,7 @@ def login():
                 user.password, request.form['password']):
             login_user(user)
             flash('Welcome.', 'success')
-            return redirect(url_for('main.home'))
+            return redirect(url_for('main.home')) #changer 
         else:
             flash('Invalid email and/or password.', 'danger')
             return render_template('user/login.html', form=form)
@@ -104,7 +96,7 @@ def profile():
 def confirm_email(token):
     if current_user.confirmed:
         flash('Account already confirmed. Please login.', 'success')
-        return redirect(url_for('main.home'))
+        return redirect(url_for('main.home')) # changer
     email = confirm_token(token)
     user = User.query.filter_by(email=current_user.email).first_or_404()
     if user.email == email:

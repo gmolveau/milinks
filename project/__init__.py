@@ -4,14 +4,16 @@
 #### imports ####
 #################
 
-from .app import app, manager, db, login_manager, material
 from flask import Flask, render_template
 from flask.ext.script import Manager
-from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
+from flask.ext.sqlalchemy import SQLAlchemy
+from flask.ext.bcrypt import Bcrypt
+from flask_mail import Mail
 from flask_material import Material
 from flask_collect import Collect
-import project.config
+from flask.ext.debugtoolbar import DebugToolbarExtension
+from .config import DevelopmentConfig, TestingConfig, ProductionConfig
 
 
 ################
@@ -19,42 +21,43 @@ import project.config
 ################
 
 app = Flask(__name__)
-app.config.from_object(os.environ['APP_SETTINGS'])
 
-app.config['BOOTSTRAP_SERVE_LOCAL'] = True
-app.config['SECRET_KEY'] = _secret_key
-# use uuidgen to generate the secret key
+dev = DevelopmentConfig()
+#prod = ProductionConfig
+#test = TestingConfig
+app.config.from_object( dev)
 
-
-app.config['SQLALCHEMY_DATABASE_URI'] = (
-    'mysql://'+db_user+':'+db_pass+'@'+db_base+'/db?charset=utf8'
-)
 
 ####################
 #### extensions ####
 ####################
 
-
+manager = Manager(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
-
 bcrypt = Bcrypt(app)
-
 mail = Mail(app)
-
 toolbar = DebugToolbarExtension(app)
-
-manager = Manager(app)
-
-login_manager = LoginManager(app)
-
 material = Material(app)
-
 collect = Collect()
 collect.init_app(app)
 collect.init_script(manager)
-
 db = SQLAlchemy(app)
+
+
+#####################
+#### flask-login ####
+#####################
+
+from project.models import User
+
+login_manager.login_view = "user.login"
+login_manager.login_message_category = "danger"
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.filter(User.id == int(user_id)).first()
 
 ########################
 #### error handlers ####

@@ -9,7 +9,7 @@ class BaseConfig(object):
 
     # main config
     SECRET_KEY = secret_key
-    SECURITY_PASSWORD_SALT = passworl_salt
+    SECURITY_PASSWORD_SALT = password_salt
     DEBUG = False
     BCRYPT_LOG_ROUNDS = 13
     WTF_CSRF_ENABLED = True
@@ -52,7 +52,7 @@ class ProductionConfig(BaseConfig):
     """Production configuration."""
     SECRET_KEY = 'my_precious'
     DEBUG = False
-    SQLALCHEMY_DATABASE_URI = 'postgresql://localhost/example'
+    SQLALCHEMY_DATABASE_URI = 'mysql://'+db_user+':'+db_pass+'@'+db_base+'/db?charset=utf8'
     DEBUG_TB_ENABLED = False
     STRIPE_SECRET_KEY = 'foo'
     STRIPE_PUBLISHABLE_KEY = 'bar'
