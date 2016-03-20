@@ -1,3 +1,5 @@
+# project/email.py
+
 from flask.ext.mail import Message
 
 from milinks import app, mail
