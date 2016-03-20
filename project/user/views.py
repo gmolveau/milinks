@@ -7,7 +7,7 @@
 
 import datetime
 
-from flask import render_template, url_for, \
+from flask import render_template, Blueprint, url_for, \
     redirect, flash, request
 from flask.ext.login import login_user, logout_user, \
     login_required, current_user
@@ -16,14 +16,20 @@ from project.models import User
 from project.email import send_email
 from project.token import generate_confirmation_token, confirm_token
 from project.decorators import check_confirmed
-from project import db, bcrypt, app
+from project import db, bcrypt
 from .forms import LoginForm, RegisterForm, ChangePasswordForm
+
+################
+#### config ####
+################
+
+user_blueprint = Blueprint('user', __name__,)
 
 ################
 #### routes ####
 ################
 
-@app.route('/register', methods=['GET', 'POST'])
+@user_blueprint.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm(request.form)
     if form.validate_on_submit():
@@ -49,7 +55,7 @@ def register():
     return render_template('user/register.html', form=form)
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@user_blueprint.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm(request.form)
     if form.validate_on_submit():
@@ -58,14 +64,14 @@ def login():
                 user.password, request.form['password']):
             login_user(user)
             flash('Welcome.', 'success')
-            return redirect(url_for('main.home')) #changer 
+            return redirect(url_for('main.home'))
         else:
             flash('Invalid email and/or password.', 'danger')
             return render_template('user/login.html', form=form)
     return render_template('user/login.html', form=form)
 
 
-@app.route('/logout')
+@user_blueprint.route('/logout')
 @login_required
 def logout():
     logout_user()
@@ -73,7 +79,7 @@ def logout():
     return redirect(url_for('user.login'))
 
 
-@app.route('/profile', methods=['GET', 'POST'])
+@user_blueprint.route('/profile', methods=['GET', 'POST'])
 @login_required
 @check_confirmed
 def profile():
@@ -91,12 +97,12 @@ def profile():
     return render_template('user/profile.html', form=form)
 
 
-@app.route('/confirm/<token>')
+@user_blueprint.route('/confirm/<token>')
 @login_required
 def confirm_email(token):
     if current_user.confirmed:
         flash('Account already confirmed. Please login.', 'success')
-        return redirect(url_for('main.home')) # changer
+        return redirect(url_for('main.home'))
     email = confirm_token(token)
     user = User.query.filter_by(email=current_user.email).first_or_404()
     if user.email == email:
@@ -110,7 +116,7 @@ def confirm_email(token):
     return redirect(url_for('main.home'))
 
 
-@app.route('/unconfirmed')
+@user_blueprint.route('/unconfirmed')
 @login_required
 def unconfirmed():
     if current_user.confirmed:
@@ -119,7 +125,7 @@ def unconfirmed():
     return render_template('user/unconfirmed.html')
 
 
-@app.route('/resend')
+@user_blueprint.route('/resend')
 @login_required
 def resend_confirmation():
     token = generate_confirmation_token(current_user.email)

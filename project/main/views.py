@@ -5,16 +5,22 @@
 #### imports ####
 #################
 
-from flask import render_template
+from flask import render_template, Blueprint
 from flask.ext.login import login_required
-from project import app
+
+
+################
+#### config ####
+################
+
+main_blueprint = Blueprint('main', __name__,)
 
 
 ################
 #### routes ####
 ################
 
-@app.route('/')
+@main_blueprint.route('/')
 @login_required
 def home():
     return render_template('main/index.html')

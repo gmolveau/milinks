@@ -44,6 +44,14 @@ collect.init_app(app)
 collect.init_script(manager)
 db = SQLAlchemy(app)
 
+####################
+#### blueprints ####
+####################
+
+from project.main.views import main_blueprint
+from project.user.views import user_blueprint
+app.register_blueprint(main_blueprint)
+app.register_blueprint(user_blueprint)
 
 #####################
 #### flask-login ####
